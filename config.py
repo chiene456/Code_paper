@@ -19,19 +19,19 @@ f_visc = lambda x: 0.5 * x
 F_alg3 = lambda x: 0.5 * x
 
 # ---- các dãy tham số điều khiển chung (k >= 1) ------------------------------------------------
-alpha_k = lambda k: 0.1 / (k + 1) ** 0.99
-eta_k = lambda k: 0.1 / (k + 1) ** 1.1
+alpha_k = lambda k: 1e-4 / (k + 1) ** 0.99
+eta_k = lambda k: 1e-2 / (k + 1) ** 1.1
 tau_k = lambda k: k / (2 * k + 1)
 mu_k = lambda k: k / (3 * k + 1)
 inv_sq = lambda k: 1.0 / (k + 1) ** 2
 
 PARAMS = {
-    "ours": dict(lam1=0.5, theta=0.4, a=0.3, b=1.8,
+    "ours": dict(lam1=0.5, theta=0.1, a=0.3, b=1.9,   # a in (0,1), b in (0,2); chung cho Ex 4.2-4.4
                  alpha=alpha_k, eta=eta_k,
                  delta=lambda k: 1.0, xi=inv_sq, a_k=inv_sq, b_k=inv_sq),
-    "alg1": dict(inertia=0.4, a=0.3, lam1=0.5,  
-                 stepsize_mode="constant", rho_mode="table"),
-    "alg2": dict(lam1=0.5, alpha=0.4, theta=0.4, mu=0.3),
+    "alg1": dict(inertia=0.5, a=0.3, lam1=0.5,
+                 stepsize_mode="adaptive", rho_mode="table"),
+    "alg2": dict(lam1=0.5, alpha=0.5, theta=0.2, mu=0.3),
     "alg3": dict(lam1=0.5, mu=0.3, alpha=alpha_k, eta=eta_k,
                  tau=tau_k, mu_k=mu_k, rho=inv_sq, xi=inv_sq),
     "alg4": dict(lam1=0.5, mu=0.3, alpha=alpha_k, eta=eta_k,

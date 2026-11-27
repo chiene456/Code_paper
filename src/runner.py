@@ -5,8 +5,8 @@ from . import algorithms as alg
 
 
 def residual(P, x, lam):
-    """TOL(k) := || x_k - J_{λ_k}^A (x_k - λ_k B x_k) ||."""
-    return P["norm"](x - P["J"](x - lam * P["B"](x), lam))
+    """TOL(k) := || x_k - J_{λ_k}^A (x_k - λ_k B x_k) ||^2  (bình phương, khớp hình trong bài)."""
+    return P["norm"](x - P["J"](x - lam * P["B"](x), lam)) ** 2
 
 
 def run(P, state0, step, tol, max_iter):

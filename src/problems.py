@@ -70,26 +70,24 @@ def elastic_net_problem(K=512, L=1024, sigma1=0.1, sigma2=0.2, seed=42):
     z = rng.standard_normal(K)
     x0 = rng.standard_normal(L)
     return dict(name="Ex4.3-ElasticNet",
-                B=lambda x: T.T @ (T @ x - z) + 2 * sigma2 * x,
+                B=lambda x: T.T @ (T @ x - z) + sigma2 * x,   # g = 1/2||Tx-z||^2 + sigma2/2 ||x||^2 (khớp Fig. 5-6)
                 J=lambda v, lam: soft_threshold(v, lam * sigma1),
-                ell=lambda_max_gram(T) + 2 * sigma2, x0=x0, **_euclid())
+                ell=lambda_max_gram(T) + sigma2, x0=x0, **_euclid())
 
 
 # --------------------------------------------------------------------------
 # Example 4.4: Sparse logistic regression  
 # --------------------------------------------------------------------------
-def sparse_logistic_problem(L=512, K=1024, nnz=30, sigma1=0.1, seed=42):
+def sparse_logistic_problem(L=32, K=64, sigma1=0.1, seed=42):
+    # Bài: L=32, K=64, T ~ N(0,1), y_j ~ Bernoulli độc lập (không sinh từ mô hình), x0 ~ randn(K)
     rng = np.random.default_rng(seed)
     T = rng.standard_normal((L, K))
-    beta_true = np.zeros(K)
-    idx = rng.choice(K, nnz, replace=False)
-    beta_true[idx] = rng.standard_normal(nnz)
-    y = rng.binomial(1, sigmoid(T @ beta_true)).astype(float)
+    y = rng.integers(0, 2, L).astype(float)
     x0 = rng.standard_normal(K)
     return dict(name="Ex4.4-SparseLogReg",
                 B=lambda b: T.T @ (sigmoid(T @ b) - y),
                 J=lambda v, lam: soft_threshold(v, lam * sigma1),
-                ell=lambda_max_gram(T) / 4.0, x0=x0, beta_true=beta_true, **_euclid())
+                ell=lambda_max_gram(T) / 4.0, x0=x0, **_euclid())
 
 
 BUILDERS = {
